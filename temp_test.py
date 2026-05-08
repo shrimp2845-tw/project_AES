@@ -34,22 +34,23 @@ def decrypt(key: str, name: str, new_name: str, m: str, con):
     print(f'successfully decrypted {name} with {key} and saved it as {new_name}')
     
     
-def main():
+def main(m):
     k1 = 'ThisIsATestKey'
     k2 = 'ThisIsAnotherTestKey'
     k = k1
     n1 = 'mahiru.png'
     n2 = 'shelter.txt'
     name = n2
-    m = 'CTR'
-    conf = AESConfig(progress_bar = True, use_log = True)
+    conf = AESConfig(progress_bar = True, use_log = False)
     encrypt(k, name, name+'.bin', m, conf)
     decrypt(k, name+'.bin', name.split('.')[0]+'2.'+name.split('.')[1], m, conf)
     h1, h2 = hashlib.md5(read_bytes(name)).hexdigest(), hashlib.md5(read_bytes(name.split('.')[0]+'2.'+name.split('.')[1])).hexdigest()
-    print('check hash:', h1 == h2)
+    print('md5', h1 == h2)
     print(h1)
     print(h2)
     
 
 if __name__ == "__main__":
-    main()
+    case = ['ecb', 'cbc', 'ctr']
+    for i in case:
+        main(i)
