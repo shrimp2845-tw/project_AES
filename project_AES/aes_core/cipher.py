@@ -2,11 +2,19 @@ from project_AES.configs import AESConfig
 from . import key_expansion, core_utils, round
 
 class CoreAES:
+    """Core implementation of AES, handling encryption and decryption."""
     def  __init__(self, key: bytes, config: AESConfig = AESConfig()):
+        """
+        Initializing class CoreAES
+
+        Args:
+            key (bytes): Key for the AES alogrithom(128, 192, 256 bits).
+            config (AESConfig): Configuration object defined in .configs. Refer to the AESConfig class for attribute details.
+        """
         self.original_key = key
         key_length = len(self.original_key) * 8
-        round_dict = {128: 10, 
-                    192: 12, 
+        round_dict = {128: 10,
+                    192: 12,
                     256: 14}
         if not round_dict.get(key_length):
             raise ValueError('CoreAES initialize: invalid key size')
@@ -21,8 +29,9 @@ class CoreAES:
             self.custom_inv_sbox = None
         self.use_mixcolumns = config.use_mixcolumns
         self.use_shiftrow = config.use_shiftrow
-    
+
     def encrypt_block(self, block: bytes) -> bytes | tuple[bytes, dict | None]:
+        """encrypt single block(size = 16bytes)"""
         if len(block) != 16:
             raise ValueError('encrypt_block: invalid block size')
         log = {'mode': 'encrypt_block',
@@ -35,23 +44,24 @@ class CoreAES:
             if self.use_log:
                 log['dataflow'].append(bytes(state).hex())
             if i == 0:
-                state = core_utils.add_rk(state, round_key) 
+                state = core_utils.add_rk(state, round_key)
             else:
-                state = round.encrypt_round(state, round_key, 
-                            last = (i == self.rounds), 
-                            use_sbox = self.use_sbox, 
-                            custom_sbox = self.custom_sbox, 
-                            use_mixcolumns = self.use_mixcolumns, 
+                state = round.encrypt_round(state, round_key,
+                            last = (i == self.rounds),
+                            use_sbox = self.use_sbox,
+                            custom_sbox = self.custom_sbox,
+                            use_mixcolumns = self.use_mixcolumns,
                             use_shiftrow = self.use_shiftrow)
         result = bytes(state)
         if self.use_log:
             log['output'] = result.hex()
             return result, log
         return result
-    
+
     def decrypt_block(self, block: bytes) -> bytes | tuple[bytes, dict | None]:
+        """decrypt single block(size = 16bytes)"""
         if len(block) != 16:
-            raise ValueError('decrypt_block: invalid block size')        
+            raise ValueError('decrypt_block: invalid block size')
         log = {'mode': 'decrypt_block',
                'input': block.hex(),
                'key': self.original_key.hex(),
@@ -64,30 +74,25 @@ class CoreAES:
             if i == 0:
                 state = core_utils.add_rk(state, round_key)
             else:
-                state = round.decrypt_round(state, round_key, 
-                            last = (i == self.rounds), 
-                            use_sbox = self.use_sbox, 
-                            custom_inv_sbox = self.custom_inv_sbox, 
-                            use_mixcolumns = self.use_mixcolumns, 
+                state = round.decrypt_round(state, round_key,
+                            last = (i == self.rounds),
+                            use_sbox = self.use_sbox,
+                            custom_inv_sbox = self.custom_inv_sbox,
+                            use_mixcolumns = self.use_mixcolumns,
                             use_shiftrow = self.use_shiftrow)
         result = bytes(state)
         if self.use_log:
             log['output'] = result.hex()
-            return result, log       
+            return result, log
         return result
-    
+
     @staticmethod
     def generate_inv_sbox(box: list[int]) -> list[int]:
+        """generate inverse table for custom sbox"""
         if len(box) != 256:
             raise ValueError('generate_inv_sbox: invalid box size')
         inv_sbox = [0] * 256
         for i in range(256):
             output_val = box[i]
-            inv_sbox[output_val] = i  
+            inv_sbox[output_val] = i
         return inv_sbox
-            
-def main():
-    pass
-
-if __name__ == "__main__":
-    main()

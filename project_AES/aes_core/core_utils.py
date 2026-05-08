@@ -16,7 +16,7 @@ SBOX = [0x63, 0x7C, 0x77, 0x7B, 0xF2, 0x6B, 0x6F, 0xC5, 0x30, 0x01, 0x67, 0x2B, 
         0x70, 0x3E, 0xB5, 0x66, 0x48, 0x03, 0xF6, 0x0E, 0x61, 0x35, 0x57, 0xB9, 0x86, 0xC1, 0x1D, 0x9E,
         0xE1, 0xF8, 0x98, 0x11, 0x69, 0xD9, 0x8E, 0x94, 0x9B, 0x1E, 0x87, 0xE9, 0xCE, 0x55, 0x28, 0xDF,
         0x8C, 0xA1, 0x89, 0x0D, 0xBF, 0xE6, 0x42, 0x68, 0x41, 0x99, 0x2D, 0x0F, 0xB0, 0x54, 0xBB, 0x16]
-        
+
 INV_SBOX = [0x52, 0x09, 0x6A, 0xD5, 0x30, 0x36, 0xA5, 0x38, 0xBF, 0x40, 0xA3, 0x9E, 0x81, 0xF3, 0xD7, 0xFB,
             0x7C, 0xE3, 0x39, 0x82, 0x9B, 0x2F, 0xFF, 0x87, 0x34, 0x8E, 0x43, 0x44, 0xC4, 0xDE, 0xE9, 0xCB,
             0x54, 0x7B, 0x94, 0x32, 0xA6, 0xC2, 0x23, 0x3D, 0xEE, 0x4C, 0x95, 0x0B, 0x42, 0xFA, 0xC3, 0x4E,
@@ -33,8 +33,9 @@ INV_SBOX = [0x52, 0x09, 0x6A, 0xD5, 0x30, 0x36, 0xA5, 0x38, 0xBF, 0x40, 0xA3, 0x
             0x60, 0x51, 0x7F, 0xA9, 0x19, 0xB5, 0x4A, 0x0D, 0x2D, 0xE5, 0x7A, 0x9F, 0x93, 0xC9, 0x9C, 0xEF,
             0xA0, 0xE0, 0x3B, 0x4D, 0xAE, 0x2A, 0xF5, 0xB0, 0xC8, 0xEB, 0xBB, 0x3C, 0x83, 0x53, 0x99, 0x61,
             0x17, 0x2B, 0x04, 0x7E, 0xBA, 0x77, 0xD6, 0x26, 0xE1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0C, 0x7D,]
-        
+
 def shiftrow(data: list[int]) -> list[int]:
+    """perform cyclic row shifting transformation"""
     t = [0, 5, 10, 15,
           4, 9, 14, 3,
           8, 13, 2, 7,
@@ -44,6 +45,7 @@ def shiftrow(data: list[int]) -> list[int]:
     return [data[i] for i in t]
 
 def inv_shiftrow(data: list[int]) -> list[int]:
+    """perform inverse cyclic row shifting transformation"""
     t = [0, 13, 10, 7,
           4, 1, 14, 11,
           8, 5, 2, 15,
@@ -51,8 +53,9 @@ def inv_shiftrow(data: list[int]) -> list[int]:
     if len(data) != 16:
         raise ValueError('inv_shiftrow: invalid data size')
     return [data[i] for i in t]
-    
+
 def mixcolumns(data: list[int]) -> list[int]:
+    """mix the columns of the state using GF multiplication"""
     def mc(column: list[int]) -> list[int]:
         if len(column) != 4:
             raise ValueError('mc: invalid data size')
@@ -69,10 +72,11 @@ def mixcolumns(data: list[int]) -> list[int]:
     return result
 
 def inv_mixcolumns(data: list[int]) -> list[int]:
+    """perform inverse process for mixcolumns"""
     def inv_mc(column: list[int]) -> list[int]:
         if len(column) != 4:
             raise ValueError('inv_mc: invalid data size')
-        s0, s1, s2, s3 = column       
+        s0, s1, s2, s3 = column
         r0 = gfm(0x0E, s0) ^ gfm(0x0B, s1) ^ gfm(0x0D, s2) ^ gfm(0x09, s3)
         r1 = gfm(0x09, s0) ^ gfm(0x0E, s1) ^ gfm(0x0B, s2) ^ gfm(0x0D, s3)
         r2 = gfm(0x0D, s0) ^ gfm(0x09, s1) ^ gfm(0x0E, s2) ^ gfm(0x0B, s3)
@@ -85,6 +89,7 @@ def inv_mixcolumns(data: list[int]) -> list[int]:
     return result
 
 def sbox(data: int, table: list[int] = None) -> int:
+    """substitute a single byte using standard sbox or a provided lookup table"""
     if data > 255 or data < 0:
         raise ValueError('sbox: invalid data size')
     if table and len(table) != 256:
@@ -93,8 +98,9 @@ def sbox(data: int, table: list[int] = None) -> int:
         table = SBOX
     result = table[data]
     return result
-    
+
 def inv_sbox(data: int, table: list[int] = None) -> int:
+    """substitute a single byte using standard inv_sbox or a provided lookup table"""
     if data > 255 or data < 0:
         raise ValueError('inv_sbox: invalid data size')
     if table and len(table) != 256:
@@ -103,8 +109,9 @@ def inv_sbox(data: int, table: list[int] = None) -> int:
         table = INV_SBOX
     result = table[data]
     return result
-    
+
 def subbytes(data: list[int], tb: list[int] = None) -> list[int]:
+    """apply sbox substitution to all bytes of data"""
     if len(data) != 16:
         raise ValueError('subbytes: invalid data size')
     if tb and len(tb) != 256:
@@ -113,21 +120,17 @@ def subbytes(data: list[int], tb: list[int] = None) -> list[int]:
     return result
 
 def inv_subbytes(data: list[int], tb: list[int] = None) -> list[int]:
+    """apply inv_sbox substitution to all bytes of data"""
     if len(data) != 16:
         raise ValueError('inv_subbytes: invalid data size')
     if tb and len(tb) != 256:
         raise ValueError('inv_subbytes: invalid table size')
     result = [inv_sbox(i, table = tb) for i in data]
     return result
-    
+
 def add_rk(data: list[int], rk: list[int]) -> list[int]:
+    """xor data with provided round key"""
     if not len(data) == len(rk) == 16:
         raise ValueError('add_rk: invalid data size')
     result = [i ^ j for i, j in zip(data, rk)]
     return result
-
-def main():
-    pass
-    
-if __name__ == "__main__":
-    main()

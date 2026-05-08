@@ -3,30 +3,35 @@ from .core_utils import sbox
 RCI = [0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1B, 0x36]
 
 def split_block(data: list[int]) -> list[list[int]]:
+    """split a flat list of integers into a list of 4 words"""
     if len(data) % 4 != 0:
         raise ValueError('split_block: invalid data size')
     result = [data[i: i+4] for i in range(0, len(data), 4)]
     return result
 
 def rotword(data: list[int]) -> list[int]:
+    """perform cyclic left shift on a word"""
     if len(data) != 4:
         raise ValueError('rotword: invalid data size')
     result = data[1:] + data[:1]
     return result
 
 def subword(data: list[int]) -> list[int]:
+    """perfrom substitution to each byte in a word"""
     if len(data) != 4:
         raise ValueError('subword: invalid data size')
     result = [sbox(i) for i in data]
     return result
 
 def rcon(round: int) -> int:
+    """generate the round constant word for a given expansion round"""
     if round > len(RCI) or round < 1:
         raise ValueError('rcon: invalid round')
     result = [RCI[round-1]] + [0x00] * 3
     return result
 
 def key_expand(key: bytes) -> list[list[int]]:
+    """generate round keys from main key"""
     round_dict = {128: (10, 4),
                 192: (12, 6),
                 256: (14, 8)}
@@ -52,9 +57,3 @@ def key_expand(key: bytes) -> list[list[int]]:
         rk = [j for k in ek[i*4: (i+1)*4] for j in k]
         rks.append(rk)
     return rks
-
-def main():
-    pass
-
-if __name__ == "__main__":
-    main()

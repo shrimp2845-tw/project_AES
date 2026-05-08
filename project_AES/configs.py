@@ -7,16 +7,11 @@ class AESConfig:
 
     Arg:
         use_sbox (bool): enable/disable the SubBytes transformation. Defaults to True.
-        
         use_mixcolumns (bool): Enable/disable the MixColumns transformation. Defaults to True.
-        
-        custom_sbox (list | None): A user-defined substitution table (256 integers). 
+        custom_sbox (list | None): A user-defined substitution table (256 integers).
             Requires `use_sbox` to be True. Defaults to None.
-            
         use_shiftrow (bool): Enable/disable the ShiftRows transformation. Defaults to True.
-        
         use_log (bool): If True, logs the state of dataflow for futher analysis.
-        
         progress_bar (bool): If True, displays a progress bar during process.
     """
     use_sbox: bool = True

@@ -6,23 +6,21 @@ from .block_utils import add_padding, remove_padding, split_data, merge_data
 from .configs import AESConfig
 from .aes_core.cipher import CoreAES
 
-
 class AES:
+    """
+    A high-level interface for AES, supporting multiple modes of operation.
+    """
     def __init__(self, key: bytes, mode: str = 'ECB', config: AESConfig = AESConfig()):
         """
-        Initializing class AES object
-        
+        Initializing class AES object.
+
         Arg:
-            key(bytes): Key for the AES alogrithom.
-            
-            mode(str): Block cipher mode of operation, 
-            ECB, CBC, CTR are supported.
-            
-            config(AESConfig): Configuration object defined in .configs.
-            Refer to the AESConfig class for attribute details.
+            key (bytes): Key for the AES alogrithom(128, 192, 256 bits).
+            mode (str): Block cipher mode of operation, ECB, CBC, CTR are supported.
+            config (AESConfig): Configuration object defined in .configs. Refer to the AESConfig class for attribute details.
         """
         self.modes = {'ECB': self.__ecb,
-                     'CBC': self.__cbc, 
+                     'CBC': self.__cbc,
                      'CTR': self.__ctr}
         if mode.upper() not in self.modes:
             raise ValueError('AES initialize: unknown mode of operation')
@@ -41,10 +39,10 @@ class AES:
         else:
             method = 'encrypt'
         log = {'method': method,
-                'mode': self.mode, 
+                'mode': self.mode,
                 'time': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                'input': data.hex(),               
-                'actions': []} 
+                'input': data.hex(),
+                'actions': []}
         if not decrypt:
             data = add_padding(data)
         que = split_data(data)
@@ -82,10 +80,10 @@ class AES:
         else:
             method = 'encrypt'
         log = {'method': method,
-                'mode': self.mode, 
+                'mode': self.mode,
                 'time': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                'input': data.hex(),               
-                'actions': []} 
+                'input': data.hex(),
+                'actions': []}
         if not decrypt:
             data = add_padding(data)
         que = split_data(data)
@@ -149,10 +147,10 @@ class AES:
         else:
             method = 'encrypt'
         log = {'method': method,
-                'mode': self.mode, 
+                'mode': self.mode,
                 'time': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                'input': data.hex(),               
-                'actions': []} 
+                'input': data.hex(),
+                'actions': []}
         result = []
         data_len = len(data)
         xor = self.__xor
@@ -251,9 +249,3 @@ class AES:
     @staticmethod
     def __xor(b1: bytes, b2: bytes):
         return bytes(i ^ j for i, j in zip(b1, b2))
-
-def main():
-    pass
-
-if __name__ == "__main__":
-    main()

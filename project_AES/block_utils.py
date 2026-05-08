@@ -30,9 +30,3 @@ def split_data(file: bytes, length: int = 16) -> list[bytes]:
 def merge_data(blocks: list[bytes]) -> bytes:
     """merge a list contain bytes strings into bytes string"""
     return b''.join(blocks)
-
-def main():
-    pass
-
-if __name__ == "__main__":
-    main()
