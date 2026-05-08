@@ -5,4 +5,4 @@ build/
 dist/
 *.egg-info/
 .env/
-
+local_test.py

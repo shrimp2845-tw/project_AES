@@ -5,9 +5,9 @@ class CoreAES:
     def  __init__(self, key: bytes, config: CoreConfig = DEFAULT_CORE):
         self.original_key = key
         key_length = len(self.original_key) * 8
-        round_dict = {128: (10, 4), 
-                192: (12, 6), 
-                256: (14, 8)}
+        round_dict = {128: 10, 
+                192: 12, 
+                256: 14}
         if not round_dict.get(key_length):
             raise ValueError('CoreAES initialize: invalid key size')
         self.rounds = round_dict[key_length]
