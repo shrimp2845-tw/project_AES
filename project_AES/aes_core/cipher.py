@@ -1,8 +1,8 @@
-from project_AES.configs import CoreConfig, DEFAULT_CORE
+from project_AES.configs import AESConfig
 from . import key_expansion, core_utils, round
 
 class CoreAES:
-    def  __init__(self, key: bytes, config: CoreConfig = DEFAULT_CORE):
+    def  __init__(self, key: bytes, config: AESConfig = AESConfig()):
         self.original_key = key
         key_length = len(self.original_key) * 8
         round_dict = {128: 10, 
@@ -25,12 +25,11 @@ class CoreAES:
     def encrypt_block(self, block: bytes) -> bytes | tuple[bytes, dict]:
         if len(block) != 16:
             raise ValueError('encrypt_block: invalid block size')
-        if self.use_log:
-            log = {'mode': 'encrypt',
-                   'input': block.hex(),
-                   'key': self.original_key,
-                   'round_keys': self.round_keys,
-                   'dataflow': []}
+        log = {'mode': 'encrypt_block',
+               'input': block.hex(),
+               'key': self.original_key.hex(),
+               'round_keys': [bytes(i).hex() for i in self.round_keys],
+               'dataflow': []}
         state = list(block)
         for i in range(self.rounds+1):
             round_key = self.round_keys[i]
@@ -47,19 +46,18 @@ class CoreAES:
                             use_shiftrow = self.use_shiftrow)
         result = bytes(state)
         if self.use_log:
-            log['output'] = result
+            log['output'] = result.hex()
             return result, log
         return result       
     
     def decrypt_block(self, block: bytes) -> bytes | tuple[bytes, dict]:
         if len(block) != 16:
-            raise ValueError('decrypt_block: invalid block size')
-        if self.use_log:
-            log = {'mode': 'decrypt',
-                   'input': block.hex(),
-                   'key': self.original_key,
-                   'round_keys': self.round_keys,
-                   'dataflow': []}
+            raise ValueError('decrypt_block: invalid block size')        
+        log = {'mode': 'decrypt_block',
+               'input': block.hex(),
+               'key': self.original_key.hex(),
+               'round_keys': [bytes(i).hex() for i in self.round_keys],
+               'dataflow': []}
         state = list(block)
         for i in range(self.rounds+1):
             round_key = self.round_keys[-(i+1)]
@@ -76,7 +74,7 @@ class CoreAES:
                             use_shiftrow = self.use_shiftrow)
         result = bytes(state)
         if self.use_log:
-            log['output'] = result
+            log['output'] = result.hex()
             return result, log       
         return result
     

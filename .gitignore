@@ -6,3 +6,5 @@ dist/
 *.egg-info/
 .env/
 local_test.py
+shelter.txt
+mahiru.png
