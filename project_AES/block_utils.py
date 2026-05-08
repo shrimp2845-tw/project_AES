@@ -22,13 +22,15 @@ def remove_padding(file: bytes, block_length: int = 16) -> bytes:
     return file[:-pl]
 
 def split_data(file: bytes, length: int = 16) -> list[bytes]:
+    """split a bytes string to a list contain bytes strings with length of 16"""
     if (len(file)%length) != 0:
         raise ValueError ('split_data: data must be splited perfectly')
     return [file[i: i+length] for i in range(0, len(file), length)]
-        
+
 def merge_data(blocks: list[bytes]) -> bytes:
+    """merge a list contain bytes strings into bytes string"""
     return b''.join(blocks)
-        
+
 def main():
     pass
 
