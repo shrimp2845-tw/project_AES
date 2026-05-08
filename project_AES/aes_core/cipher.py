@@ -27,10 +27,10 @@ class CoreAES:
             raise ValueError('encrypt_block: invalid block size')
         if self.use_log:
             log = {'mode': 'encrypt',
-                       'input': block.hex(),
-                       'key': self.original_key,
-                       'round_keys': self.round_keys,
-                       'dataflow': []}
+                   'input': block.hex(),
+                   'key': self.original_key,
+                   'round_keys': self.round_keys,
+                   'dataflow': []}
         state = list(block)
         for i in range(self.rounds+1):
             round_key = self.round_keys[i]
@@ -56,10 +56,10 @@ class CoreAES:
             raise ValueError('decrypt_block: invalid block size')
         if self.use_log:
             log = {'mode': 'decrypt',
-                       'input': block.hex(),
-                       'key': self.original_key,
-                       'round_keys': self.round_keys,
-                       'dataflow': []}
+                   'input': block.hex(),
+                   'key': self.original_key,
+                   'round_keys': self.round_keys,
+                   'dataflow': []}
         state = list(block)
         for i in range(self.rounds+1):
             round_key = self.round_keys[-(i+1)]

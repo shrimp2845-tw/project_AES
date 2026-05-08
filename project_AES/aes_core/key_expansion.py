@@ -28,8 +28,8 @@ def rcon(round: int) -> int:
     
 def key_expand(key: bytes) -> list[list[int]]:
     round_dict = {128: (10, 4), 
-                            192: (12, 6), 
-                            256: (14, 8)}
+                        192: (12, 6), 
+                        256: (14, 8)}
     key_length = len(key) * 8   
     if not round_dict.get(key_length):
         raise ValueError('key_expand: invalid key size')   
