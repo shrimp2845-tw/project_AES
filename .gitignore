@@ -1,0 +1,6 @@
+sketch.txt
+pycache/
+build/
+dist/
+*.egg-info/
+
