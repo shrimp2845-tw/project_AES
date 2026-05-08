@@ -9,8 +9,8 @@ from tqdm import tqdm
 class AES:
     def __init__(self, key: bytes, mode: str = 'ECB', config: AESConfig = AESConfig()):
         self.modes = {'ECB': self.__ecb,
-                            'CBC': self.__cbc, 
-                            'CTR': self.__ctr}
+                        'CBC': self.__cbc, 
+                        'CTR': self.__ctr}
         if mode.upper() not in self.modes:
             raise ValueError('AES initialize: unknown mode of operation')
         self.cipher = CoreAES(key, config = config)
