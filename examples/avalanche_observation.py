@@ -32,18 +32,18 @@ def observate(config: AESConfig, key_len: int = 128):
         raise ValueError
     cipher = AES(os.urandom(key_len//8), config = config)
     total = 0
-    for i in range(100):
+    for i in range(50):
         rpt1 = os.urandom(16)
         rpt2 = flip_bit(rpt1)
         total += compare(cipher.encrypt_block(rpt1), cipher.encrypt_block(rpt2))
-    return total/100
+    return total/50
     
 def test(conf, key_len: int = 128):
     total = 0
-    for i in tqdm(range(50)):
+    for i in tqdm(range(100)):
         p = observate(conf, key_len)
         total += p
-    return total/50
+    return total/100
     
 def main():
     test_cases = [STANDARD, NO_SBOX, NO_MIXCOLUMNS, NO_SHIFTROW]

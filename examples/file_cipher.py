@@ -9,6 +9,7 @@ Warning:
 This example is for demonstrating module functionality 
 only and does not guarantee the security of encrypted data.
 """
+
 PATH = "./test_files/"
 
 def sha256(data: str) -> bytes:
