@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "project-aes"
-version = "0.1.1"
+version = "0.2.0"
 description = "A modular Python implementation of AES featuring customizable transformations and comprehensive JSON dataflow logging for cryptographic analysis."
 readme = "README.md"
 requires-python = ">=3.10"

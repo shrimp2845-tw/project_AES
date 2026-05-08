@@ -62,7 +62,7 @@ def main():
         n = input('name for decrypted file: ')
         k = input('key: ')
         m = input('mode: ')
-        p, n = PATH+p, PATH+n
+        c, n = PATH+c, PATH+n
         t = time.time()
         decrypt(k, c, n, m, config)
         print('\ntime spent:', round(time.time()-t, 2),'sec')

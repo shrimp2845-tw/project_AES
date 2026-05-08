@@ -1,3 +1,4 @@
+from functools import cache
 
 def xtime(a: int) -> int:
     """perform a × 2 within GF(2⁸)."""
@@ -6,6 +7,7 @@ def xtime(a: int) -> int:
         a ^= 0x11B
     return a & 0xFF
 
+@cache
 def gfm(a: int, b: int) -> int:
     """preform a × b within GF(2⁸)"""
     result = 0
