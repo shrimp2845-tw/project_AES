@@ -132,7 +132,6 @@ class AES:
                 for i, j in enumerate(que):
                     v = self.cipher.encrypt_block(xor(j, v))
                     result.append(v)
-                result = [iv] + result
                 return merge_data(result), None
             else:
                 for i, j in enumerate(que):
@@ -222,7 +221,7 @@ class AES:
                         raise OverflowError('ctr: counter overflow')
                     counter = i.to_bytes(4)
                     key_stream.append(self.cipher.encrypt_block(nonce + counter))
-                result = xor(data, merge_data(key_stream))
+                result = xor(ct, merge_data(key_stream))
                 return result, None
 
     def encrypt(self, data: bytes) -> bytes:

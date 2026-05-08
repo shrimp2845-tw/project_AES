@@ -28,7 +28,3 @@ class AESConfig:
     def __post_init__(self):
         if not self.use_sbox and self.custom_sbox is not None:
             raise ValueError("custom_sbox requires use_sbox=True")
-            
-
-    
-
