@@ -28,7 +28,6 @@ class CoreAES:
         log = {'mode': 'encrypt_block',
                'input': block.hex(),
                'key': self.original_key.hex(),
-               'round_keys': [bytes(i).hex() for i in self.round_keys],
                'dataflow': []}
         state = list(block)
         for i in range(self.rounds+1):
@@ -56,7 +55,6 @@ class CoreAES:
         log = {'mode': 'decrypt_block',
                'input': block.hex(),
                'key': self.original_key.hex(),
-               'round_keys': [bytes(i).hex() for i in self.round_keys],
                'dataflow': []}
         state = list(block)
         for i in range(self.rounds+1):

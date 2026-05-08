@@ -83,8 +83,7 @@ class AES:
                     v = nb
                 result = [iv] + result
                 log['actions'].append({'method': 'connect', 'input': ([result[0].hex()], [i.hex() for i in result[1:]]), 'output': [i.hex() for i in result]})
-                return result, log
-                
+                return result, log               
             else:
                 for i, j in enumerate(que):
                     if i == 0:
@@ -139,6 +138,8 @@ class AES:
                 if self.progress_bar:
                     iterator = tqdm(iterator)
                 for i in iterator:
+                    if i >= 0X10000000000000000:
+                        raise OverflowError('ctr: counter overflow')                      
                     counter = i.to_bytes(16)
                     nk, block_log = self.cipher.encrypt_block(xor(counter, nonce))
                     key_stream.append(nk)
@@ -156,6 +157,8 @@ class AES:
                 if self.progress_bar:
                     iterator = tqdm(iterator)
                 for i in iterator:
+                    if i >= 0X10000000000000000:
+                        raise OverflowError('ctr: counter overflow')
                     counter = i.to_bytes(16)
                     nk, block_log = self.cipher.encrypt_block(xor(counter, nonce))
                     key_stream.append(nk)
@@ -172,6 +175,8 @@ class AES:
                 if self.progress_bar:
                     iterator = tqdm(iterator)
                 for i in iterator:
+                    if i >= 0X10000000000000000:
+                        raise OverflowError('ctr: counter overflow')
                     counter = i.to_bytes(16)
                     key_stream.append(self.cipher.encrypt_block(xor(counter, nonce)))
                 result = [nonce] + [xor(i, j) for i, j in zip(data, key_stream)]
@@ -183,6 +188,8 @@ class AES:
                 if self.progress_bar:
                     iterator = tqdm(iterator)
                 for i in iterator:
+                    if i >= 0X10000000000000000:
+                        raise OverflowError('ctr: counter overflow')
                     counter = i.to_bytes(16)
                     key_stream.append(self.cipher.encrypt_block(xor(counter, nonce)))
                 result = [xor(i, j) for i, j in zip(ct, key_stream)]
