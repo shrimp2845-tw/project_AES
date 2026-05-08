@@ -26,7 +26,7 @@ class CoreAES:
         if len(block) != 16:
             raise ValueError('encrypt_block: invalid block size')
         if self.use_log:
-            log = {'mode': 'decrypt',
+            log = {'mode': 'encrypt',
                        'input': block.hex(),
                        'key': self.original_key,
                        'round_keys': self.round_keys,
@@ -62,7 +62,7 @@ class CoreAES:
                        'dataflow': []}
         state = list(block)
         for i in range(self.rounds+1):
-            round_key = self.round_keys[i]
+            round_key = self.round_keys[-(i+1)]
             if self.use_log:
                 log['dataflow'].append(bytes(state).hex())
             if i == 0:
