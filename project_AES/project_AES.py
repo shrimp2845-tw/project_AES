@@ -9,8 +9,8 @@ from tqdm import tqdm
 class AES:
     def __init__(self, key: bytes, mode: str = 'ECB', config: AESConfig = AESConfig()):
         self.modes = {'ECB': self.__ecb,
-                        'CBC': self.__cbc, 
-                        'CTR': self.__ctr}
+                     'CBC': self.__cbc, 
+                     'CTR': self.__ctr}
         if mode.upper() not in self.modes:
             raise ValueError('AES initialize: unknown mode of operation')
         self.cipher = CoreAES(key, config = config)
@@ -131,36 +131,36 @@ class AES:
         xor = self.__xor
         if self.use_log:
             if not decrypt:
-                nonce = os.urandom(8).ljust(16, b'\x00')
+                nonce = os.urandom(12)
                 log['nonce'] = nonce.hex()
                 key_stream = []
                 iterator = range(len(data))
                 if self.progress_bar:
                     iterator = tqdm(iterator)
                 for i in iterator:
-                    if i >= 0X10000000000000000:
+                    if i >= 0X100000000:
                         raise OverflowError('ctr: counter overflow')                      
-                    counter = i.to_bytes(16)
-                    nk, block_log = self.cipher.encrypt_block(xor(counter, nonce))
+                    counter = i.to_bytes(4)
+                    nk, block_log = self.cipher.encrypt_block(nonce + counter)
                     key_stream.append(nk)
                     log['actions'].append(block_log)
-                result = [nonce] + [xor(i, j) for i, j in zip(data, key_stream)]
+                result = [nonce.rjust(16, b'\x00')] + [xor(i, j) for i, j in zip(data, key_stream)]
                 log['actions'].append({'method': 'xor', 'input': ([i.hex() for i in data], [i.hex() for i in key_stream]), 'output': [i.hex() for i in result[1:]]})
                 log['actions'].append({'method': 'connect', 'input': ([result[0].hex()], [i.hex() for i in result[1:]]), 'output': [i.hex() for i in result]})
                 log['output'] = [i.hex() for i in result]
                 return result, log
             else:
-                nonce, ct = data[0], data[1:]
+                nonce, ct = data[0][4:], data[1:]
                 log['nonce'] = nonce.hex()
                 key_stream = []
                 iterator = range(len(data)-1)
                 if self.progress_bar:
                     iterator = tqdm(iterator)
                 for i in iterator:
-                    if i >= 0X10000000000000000:
+                    if i >= 0X100000000:
                         raise OverflowError('ctr: counter overflow')
-                    counter = i.to_bytes(16)
-                    nk, block_log = self.cipher.encrypt_block(xor(counter, nonce))
+                    counter = i.to_bytes(4)
+                    nk, block_log = self.cipher.encrypt_block(nonce + counter)
                     key_stream.append(nk)
                     log['actions'].append(block_log)           
                 result = [xor(i, j) for i, j in zip(ct, key_stream)]
@@ -169,29 +169,29 @@ class AES:
                 return result, log
         else:
             if not decrypt:
-                nonce = os.urandom(8).ljust(16, b'\x00')
+                nonce = os.urandom(12)
                 key_stream = []
                 iterator = range(len(data))
                 if self.progress_bar:
                     iterator = tqdm(iterator)
                 for i in iterator:
-                    if i >= 0X10000000000000000:
+                    if i >= 0X100000000:
                         raise OverflowError('ctr: counter overflow')
-                    counter = i.to_bytes(16)
-                    key_stream.append(self.cipher.encrypt_block(xor(counter, nonce)))
-                result = [nonce] + [xor(i, j) for i, j in zip(data, key_stream)]
+                    counter = i.to_bytes(4)
+                    key_stream.append(self.cipher.encrypt_block(nonce + counter))
+                result = [nonce.rjust(16, b'\x00')] + [xor(i, j) for i, j in zip(data, key_stream)]
                 return result, None
             else:
-                nonce, ct = data[0], data[1:]
+                nonce, ct = data[0][4:], data[1:]
                 key_stream = []
                 iterator = range(len(data)-1)
                 if self.progress_bar:
                     iterator = tqdm(iterator)
                 for i in iterator:
-                    if i >= 0X10000000000000000:
+                    if i >= 0X100000000:
                         raise OverflowError('ctr: counter overflow')
-                    counter = i.to_bytes(16)
-                    key_stream.append(self.cipher.encrypt_block(xor(counter, nonce)))
+                    counter = i.to_bytes(4)
+                    key_stream.append(self.cipher.encrypt_block(nonce + counter))
                 result = [xor(i, j) for i, j in zip(ct, key_stream)]
                 return result, None
                    
@@ -210,7 +210,7 @@ class AES:
             with open(f'{self.log_path}log{datetime.now().strftime("%Y%m%d_%H%M%S_%f")}.json', 'w') as f:
                 json.dump(log, f)
         return remove_padding(merge_data(result))
-    
+        
     @staticmethod
     def __xor(b1: bytes, b2: bytes):
         return bytes(i ^ j for i, j in zip(b1, b2))
