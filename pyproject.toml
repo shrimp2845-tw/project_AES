@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "project-aes"
+version = "0.1.0"
+description = "A modular Python implementation of AES featuring customizable transformations and comprehensive JSON dataflow logging for cryptographic analysis."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENCE.txt"]
+authors = [
+    {name = "shrimp2845", email = "goldencheng15@gmail.com"}
+]
+keywords = ["aes", "cryptography", "education", "cipher", "analysist"]
+
+classifiers = [
+    "Programming Language :: Python :: 3"
+]
+
+[project.urls]
+Homepage = "https://github.com/shrimp2845-tw/project_AES"
+Repository = "https://github.com/shrimp2845-tw/project_AES"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["project_AES*"]

@@ -8,8 +8,8 @@
 A pure Python implementation of the Advanced Encryption Standard (AES) algorithm with support for multiple key sizes, configurable internal transformations, detailed logging, and multiple cipher modes of operation.
 
 ## Features
-- AES-128 / AES-192 / AES-256 support
-- ECB / CBC / CTR modes
+- AES-128/AES-192/AES-256 support
+- ECB/CBC/CTR modes
 - PKCS#7 padding
 - Custom AES transformation configuration
 - Custom S-Box support
@@ -81,7 +81,7 @@ decrypt(data: bytes) -> bytes
 
 encrypt_block(block: bytes) -> bytes
 decrypt_block(block: bytes) -> bytes
-→ Low-level single block (16 bytes) encryption/decryption
+→ single block (16 bytes) encryption/decryption
 ```
 ## Examples
 This project includes two example scripts demonstrating different functionalities of the module:  
@@ -96,18 +96,22 @@ A script for encrypting and decrypting files using AES with various operation mo
 
 You can try to decrypt [these examples](https://github.com/shrimp2845-tw/project_AES/tree/main/examples/test_files) by your self
  
-hina.png -> encrypt(key=gehenna, mode=ECB) -> hina.bin
+- hina.png -> encrypt(key=gehenna, mode=ECB) -> hina.bin
 
-kayoko.jpg -> encrypt(key=cat, mode=CBC) -> kayoko.bin
+- kayoko.jpg -> encrypt(key=cat, mode=CBC) -> kayoko.bin
 
-r18.gif -> encrypt(key=give you up, mode=CTR) -> r18.bin
+- r18.gif -> encrypt(key=give you up, mode=CTR) -> r18.bin
+
+(I originally wanted to use a picture of Shiina Mahiru, but I couldn’t find any good images under a cc license QAQ)
 
 **2.Avalanche Observation**:
+
+![Alt-text](https://raw.githubusercontent.com/shrimp2845-tw/project_AES/main/examples/test_files/avalanche_observation.png)
 
 ## Disclaimer
 
 This implementation is intended for **analysis and educational purposes only**.  
 It does **not guarantee cryptographic security** or **production-level performance efficiency**.  
 
-Do not use this project in any environment that requires strong security assurances or optimized encryption performance.
+Do not use this project in any environment that requires strong security assurances.
 
