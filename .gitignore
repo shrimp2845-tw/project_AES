@@ -1,5 +1,6 @@
 sketch.txt
 __pycache__/
+*.pyc/
 build/
 dist/
 *.egg-info/
