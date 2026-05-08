@@ -49,7 +49,7 @@ def main():
     test_cases = [STANDARD, NO_SBOX, NO_MIXCOLUMNS, NO_SHIFTROW]
     for i in test_cases:
         print('_'*30)
-        print(f'Test Avalance: \n{i} : {test(i)}')
+        print(f'Test Avalance: \n{i} : \n{test(i)}')
 
 if __name__ == "__main__":
     main()

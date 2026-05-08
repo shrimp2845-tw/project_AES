@@ -38,7 +38,7 @@ def decrypt_data(key: str, ciphertext: bytes, mode: str, conf):
 def main(mode):
     key = 'ThisIsATestKey'
     original_data = TEST_DATA.encode()
-    conf = AESConfig(progress_bar=True, use_log=False)
+    conf = AESConfig(progress_bar=True, use_log=True)
     print(f'__________mode {mode.upper()}:__________')
     encrypted = encrypt_data(key, original_data, mode, conf)
     decrypted = decrypt_data(key, encrypted, mode, conf)

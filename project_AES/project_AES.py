@@ -83,6 +83,7 @@ class AES:
                 'mode': self.mode,
                 'time': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 'input': data.hex(),
+                'iv': None,
                 'actions': []}
         if not decrypt:
             data = add_padding(data)
@@ -111,6 +112,7 @@ class AES:
                 for i, j in enumerate(que):
                     if i == 0:
                         v = j
+                        log['iv'] = v.hex()
                         log['actions'].append({'method': 'get iv', 'output': v.hex()})
                         continue
                     nb, block_log = self.cipher.decrypt_block(j)
@@ -150,9 +152,12 @@ class AES:
                 'mode': self.mode,
                 'time': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 'input': data.hex(),
+                'nonce': None,
                 'actions': []}
         result = []
         data_len = len(data)
+        if decrypt:
+            data_len -= 12
         xor = self.__xor
         if self.use_log:
             if not decrypt:
@@ -170,16 +175,16 @@ class AES:
                     key_stream.append(nk)
                     log['actions'].append(block_log)
                 key_stream = merge_data(key_stream)[:data_len]
-                result = nonce.rjust(16, b'\x00') + xor(data, key_stream)
+                result = nonce + xor(data, key_stream)
                 log['actions'].append({'method': 'xor', 'input': (data.hex(), key_stream.hex()), 'output': result[16:].hex()})
-                log['actions'].append({'method': 'connect', 'input': (result[:16].hex(), result[16:].hex()), 'output': result.hex()})
+                log['actions'].append({'method': 'connect', 'input': (result[:12].hex(), result[12:].hex()), 'output': result.hex()})
                 log['output'] = result.hex()
                 return result, log
             else:
-                nonce, ct = data[4:16], data[16:]
+                nonce, ct = data[:12], data[12:]
                 log['nonce'] = nonce.hex()
                 key_stream = []
-                iterator = range((data_len//16)+int(data_len%16 != 0)-1)
+                iterator = range((data_len//16)+int(data_len%16 != 0))
                 if self.progress_bar:
                     iterator = tqdm(iterator)
                 for i in iterator:
@@ -206,12 +211,12 @@ class AES:
                         raise OverflowError('ctr: counter overflow')
                     counter = i.to_bytes(4)
                     key_stream.append(self.cipher.encrypt_block(nonce + counter))
-                result = nonce.rjust(16, b'\x00') + xor(data, merge_data(key_stream))
+                result = nonce + xor(data, merge_data(key_stream))
                 return result, None
             else:
-                nonce, ct = data[4:16], data[16:]
+                nonce, ct = data[:12], data[12:]
                 key_stream = []
-                iterator = range((data_len//16)+int(data_len%16 != 0)-1)
+                iterator = range((data_len//16)+int(data_len%16 != 0))
                 if self.progress_bar:
                     iterator = tqdm(iterator)
                 for i in iterator:
