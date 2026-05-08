@@ -30,7 +30,7 @@ class AES:
         self.mode = mode.upper()
         self.mode_func = self.modes[self.mode]
         self.log_path = './projectAES_log/'
-        if not os.path.exists(self.log_path):
+        if self.use_log and not os.path.exists(self.log_path):
             os.mkdir(self.log_path)
 
     def __ecb(self, data: bytes, decrypt: bool = False) -> tuple[bytes, dict | None]:
@@ -227,7 +227,7 @@ class AES:
         result, log = self.mode_func(data)
         if log:
             with open(f'{self.log_path}log{datetime.now().strftime("%Y%m%d_%H%M%S_%f")}.json', 'w') as f:
-                json.dump(log, f)
+                json.dump(log, f, indent = 4)
         return result
 
     def decrypt(self, data: bytes) -> bytes:
@@ -235,16 +235,16 @@ class AES:
         result, log = self.mode_func(data, decrypt = True)
         if log:
             with open(f'{self.log_path}log{datetime.now().strftime("%Y%m%d_%H%M%S_%f")}.json', 'w') as f:
-                json.dump(log, f)
+                json.dump(log, f, indent = 4)
         return result
 
     def encrypt_block(self, data: bytes) -> bytes | tuple[bytes, dict]:
         """encrypt one block of bytes data (size = 16 bytes)"""
-        return self.cipher.encrypt(data)
+        return self.cipher.encrypt_block(data)
 
     def decrypt_block(self, data: bytes) -> bytes | tuple[bytes, dict]:
         """decrypt one block of bytes data (size = 16 bytes)"""
-        return self.cipher.decrypt(data)
+        return self.cipher.decrypt_block(data)
 
     @staticmethod
     def __xor(b1: bytes, b2: bytes):
