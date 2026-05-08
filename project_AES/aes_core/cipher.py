@@ -22,7 +22,7 @@ class CoreAES:
         self.use_mixcolumns = config.use_mixcolumns
         self.use_shiftrow = config.use_shiftrow
     
-    def encrypt_block(self, block: bytes) -> bytes | tuple[bytes, dict]:
+    def encrypt_block(self, block: bytes) -> bytes | tuple[bytes, dict | None]:
         if len(block) != 16:
             raise ValueError('encrypt_block: invalid block size')
         log = {'mode': 'encrypt_block',
@@ -48,9 +48,9 @@ class CoreAES:
         if self.use_log:
             log['output'] = result.hex()
             return result, log
-        return result       
+        return result
     
-    def decrypt_block(self, block: bytes) -> bytes | tuple[bytes, dict]:
+    def decrypt_block(self, block: bytes) -> bytes | tuple[bytes, dict | None]:
         if len(block) != 16:
             raise ValueError('decrypt_block: invalid block size')        
         log = {'mode': 'decrypt_block',

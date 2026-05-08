@@ -3,9 +3,6 @@ from project_AES.configs import AESConfig
 import time
 import hashlib
 
-
-DF = AESConfig()
-
 def sha256(data: str) -> bytes:
     return hashlib.sha256(data.encode()).digest()
     
@@ -22,14 +19,14 @@ def write_bytes(name, data):
     bfile.write(data)
     bfile.close()
     
-def encrypt(key: str, name: str, new_name: str, m: str, con = DF):
+def encrypt(key: str, name: str, new_name: str, m: str, con):
     c = AES(sha256(key)[:16], mode = m, config = con)
     data = read_bytes(name)
     cdata = c.encrypt(data)
     write_bytes(new_name, cdata)
     print(f'successfully encrypted {name} with {key} and saved it as {new_name}')
      
-def decrypt(key: str, name: str, new_name: str, m: str, con = DF):
+def decrypt(key: str, name: str, new_name: str, m: str, con):
     c = AES(sha256(key)[:16], mode = m, config = con)
     data = read_bytes(name)
     cdata = c.decrypt(data)
@@ -41,11 +38,17 @@ def main():
     k1 = 'ThisIsATestKey'
     k2 = 'ThisIsAnotherTestKey'
     k = k1
-    name = 'shelter.txt'
-    m = 'CBC'
+    n1 = 'mahiru.png'
+    n2 = 'shelter.txt'
+    name = n2
+    m = 'CTR'
     conf = AESConfig(progress_bar = True, use_log = True)
     encrypt(k, name, name+'.bin', m, conf)
     decrypt(k, name+'.bin', name.split('.')[0]+'2.'+name.split('.')[1], m, conf)
+    h1, h2 = hashlib.md5(read_bytes(name)).hexdigest(), hashlib.md5(read_bytes(name.split('.')[0]+'2.'+name.split('.')[1])).hexdigest()
+    print('check hash:', h1 == h2)
+    print(h1)
+    print(h2)
     
 
 if __name__ == "__main__":
