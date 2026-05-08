@@ -6,8 +6,8 @@ class CoreAES:
         self.original_key = key
         key_length = len(self.original_key) * 8
         round_dict = {128: 10, 
-                192: 12, 
-                256: 14}
+                    192: 12, 
+                    256: 14}
         if not round_dict.get(key_length):
             raise ValueError('CoreAES initialize: invalid key size')
         self.rounds = round_dict[key_length]
