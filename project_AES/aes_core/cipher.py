@@ -19,7 +19,12 @@ class CoreAES:
         if not round_dict.get(key_length):
             raise ValueError('CoreAES initialize: invalid key size')
         self.rounds = round_dict[key_length]
-        self.round_keys = key_expansion.key_expand(key)
+        if config.rounds or config.rounds == 0:
+            if config.rounds < self.rounds and config.rounds >= 0:
+                self.rounds = config.rounds
+            else:
+                raise ValueError('CoreAES initialize: invalid rounds')
+        self.round_keys = key_expansion.key_expand(key)[:self.rounds+1]
         self.use_sbox = config.use_sbox
         self.custom_sbox = config.custom_sbox
         self.use_log = config.use_log
@@ -41,7 +46,7 @@ class CoreAES:
         state = list(block)
         for i in range(self.rounds+1):
             round_key = self.round_keys[i]
-            if self.use_log:
+            if self.use_log and i != 0:
                 log['dataflow'].append(bytes(state).hex())
             if i == 0:
                 state = core_utils.add_rk(state, round_key)
@@ -69,7 +74,7 @@ class CoreAES:
         state = list(block)
         for i in range(self.rounds+1):
             round_key = self.round_keys[-(i+1)]
-            if self.use_log:
+            if self.use_log and i != 0:
                 log['dataflow'].append(bytes(state).hex())
             if i == 0:
                 state = core_utils.add_rk(state, round_key)
