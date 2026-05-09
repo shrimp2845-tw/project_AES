@@ -3,7 +3,7 @@ from . import core_utils
 def encrypt_round(state: list[int], rkey: list[int], last: bool = False, use_sbox: bool = True, custom_sbox: list[int] = None, use_mixcolumns: bool = True, use_shiftrow: bool = True) -> list[int]:
     """
     Performs one encryption round of a block cipher (AES-like)
-    
+
     Args:
         state (list[int]): A 16-byte list representing the current AES state.
         rkey (list[int]): A 16-byte list representing the round key.
@@ -12,10 +12,10 @@ def encrypt_round(state: list[int], rkey: list[int], last: bool = False, use_sbo
         custom_sbox (list[int], optional): A custom S-box lookup table. Defaults to None.
         use_mixcolumns (bool): Whether to perform the MixColumns transformation.
         use_shiftrow (bool): Whether to perform the ShiftRows transformation.
-    
+
     Returns:
         list[int]: The transformed 16-byte state after the encryption round.
-    
+
     """
     if not len(state) == len(rkey) == 16:
         raise ValueError('encrypt_round: invalid data or key size')

@@ -43,7 +43,7 @@ def main(mode):
     encrypted = encrypt_data(key, original_data, mode, conf)
     decrypted = decrypt_data(key, encrypted, mode, conf)
     h1 = hashlib.md5(original_data).hexdigest()
-    h2 = hashlib.md5(decrypted).hexdigest()   
+    h2 = hashlib.md5(decrypted).hexdigest()
     print('decrypted text:')
     print(decrypted.decode()[:60]+'......')
     print('hash check:', h1 == h2)
