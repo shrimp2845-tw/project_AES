@@ -9,3 +9,5 @@ local_test.py
 shelter.txt
 mahiru.png
 project_AESlog/
+*.csv
+*.json

@@ -2,7 +2,7 @@
 
 ## About
 - **Author:** shrimp2845  
-- **Version:** 0.3.0
+- **Version:** 0.4.0
 - **License:** MIT
 
 A pure Python implementation of the Advanced Encryption Standard (AES) algorithm with support for multiple key sizes, configurable internal transformations, detailed logging, and multiple cipher modes of operation.
@@ -84,12 +84,14 @@ decrypt_block(block: bytes) -> bytes
 → single block (16 bytes) encryption/decryption
 ```
 ## Examples
-This project includes two example scripts demonstrating different functionalities of the module:  
+This project includes three example scripts demonstrating different functionalities of the module:  
 
 **​1.[File Cipher](https://github.com/shrimp2845-tw/project_AES/blob/main/examples/file_cipher.py)**: 
 A script for encrypting and decrypting files using AES with various operation modes (ECB, CBC, CTR).  
 
-**​2.[Avalanche Observation](https://github.com/shrimp2845-tw/project_AES/blob/main/examples/avalanche_observation.py)**: A script to observe the avalanche effect by testing how bit-flips in plaintext affect the ciphertext under different configurations.  
+**​2.[Avalanche Observation](https://github.com/shrimp2845-tw/project_AES/blob/main/examples/avalanche_observation.py)**: A script to observe the avalanche effect by testing how bit-flips in plaintext affect the ciphertext under different configurations.
+
+**3.[Differential](https://github.com/shrimp2845-tw/project_AES/blob/main/examples/differential.py)**: A script constructs Difference Distribution Tables (DDT) to analyze the cryptographic strength of the S-Box (both standard and user defined).
 
 ### Samples
 **1.File Cipher**:
