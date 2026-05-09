@@ -13,7 +13,7 @@ class AESConfig:
         use_shiftrow (bool): Enable/disable the ShiftRows transformation. Defaults to True.
         use_log (bool): If True, logs the state of dataflow for futher analysis.
         progress_bar (bool): If True, displays a progress bar during process.
-        rounds(int or None): If True, use chosen round to encrypt/decrypt. must be smaller than default rounds.
+        rounds(int | None): If True, use chosen round to encrypt/decrypt. Must be smaller than default rounds.
     """
     use_sbox: bool = True
     use_mixcolumns: bool = True
