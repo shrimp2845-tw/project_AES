@@ -14,7 +14,7 @@ def xtime128(a: int) -> int:
     if msb:
         a ^= 0xE1000000000000000000000000000000
     return a & ((1 << 128) - 1)
-
+    
 @cache
 def gfm(a: int, b: int) -> int:
     """preform a × b within GF(2⁸)"""
@@ -29,7 +29,7 @@ def gfm(a: int, b: int) -> int:
 def gfm128(a: int, b: int) -> int:
     """preform a × b within GF(2¹²⁸)"""
     result = 0
-    for i in range(8):
+    for i in range(128):
         if b & 1:
             result ^= a
         a = xtime128(a)
