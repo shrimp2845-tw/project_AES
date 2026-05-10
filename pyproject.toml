@@ -8,7 +8,7 @@ version = "0.4.2"
 description = "A modular Python implementation of AES featuring customizable transformations and comprehensive JSON dataflow logging for cryptographic analysis."
 readme = "README.md"
 requires-python = ">=3.10"
-license = {text = "MIT"}
+license = "MIT"
 license-files = ["LICENCE.txt"]
 dependencies = ["tqdm"]
 authors = [
