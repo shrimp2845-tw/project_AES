@@ -2,7 +2,7 @@
 
 ## About
 - **Author:** shrimp2845  
-- **Version:** 0.4.0
+- **Version:** 0.4.2
 - **License:** MIT
 
 A pure Python implementation of the Advanced Encryption Standard (AES) algorithm with support for multiple key sizes, configurable internal transformations, detailed logging, and multiple cipher modes of operation.
@@ -116,4 +116,17 @@ This implementation is intended for **analysis and educational purposes only**.
 It does **not guarantee cryptographic security** or **production-level performance efficiency**.  
 
 Do not use this project in any environment that requires strong security assurances.
+
+## License
+
+**Source code**: MIT License
+
+**Example assets**:
+  Some materials under [/examples/test_files](https://github.com/shrimp2845-tw/project_AES/tree/main/examples/test_files) are used for demonstration purposes only and remain under their original license:
+  
+© SeriBaKa (https://www.deviantart.com/seribaka/art/Blue-archive-sorasaki-hina-905973822)
+
+© らんどう(https://www.pixiv.net/artworks/116363500)
+
+Thanks to the original creators 🤎
 
