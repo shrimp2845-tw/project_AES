@@ -99,7 +99,7 @@ class AES:
                 v = iv
                 for i, j in enumerate(que):
                     nb, block_log = self.cipher.encrypt_block(xor(j, v))
-                    log['actions'].append({'method': 'xor', 'input': (j.hex(), v.hex()), 'output': nb.hex()})
+                    log['actions'].append({'method': 'xor', 'input': (j.hex(), v.hex()), 'output': xor(j, v).hex()})
                     log['actions'].append(block_log)
                     result.append(nb)
                     v = nb
@@ -176,7 +176,7 @@ class AES:
                     log['actions'].append(block_log)
                 key_stream = merge_data(key_stream)[:data_len]
                 result = nonce + xor(data, key_stream)
-                log['actions'].append({'method': 'xor', 'input': (data.hex(), key_stream.hex()), 'output': result[16:].hex()})
+                log['actions'].append({'method': 'xor', 'input': (data.hex(), key_stream.hex()), 'output': result[12:].hex()})
                 log['actions'].append({'method': 'connect', 'input': (result[:12].hex(), result[12:].hex()), 'output': result.hex()})
                 log['output'] = result.hex()
                 return result, log
@@ -252,5 +252,5 @@ class AES:
         return self.cipher.decrypt_block(data)
 
     @staticmethod
-    def __xor(b1: bytes, b2: bytes):
+    def __xor(b1: bytes, b2: bytes) -> bytes:
         return bytes(i ^ j for i, j in zip(b1, b2))
