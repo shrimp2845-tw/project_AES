@@ -26,6 +26,7 @@ class CoreAES:
                 raise ValueError('CoreAES initialize: invalid rounds')
         self.round_keys = key_expansion.key_expand(key)[:self.rounds+1]
         self.use_sbox = config.use_sbox
+        self.use_addrk = config.use_addrk
         self.custom_sbox = config.custom_sbox
         self.use_log = config.use_log
         if self.custom_sbox:
@@ -48,7 +49,7 @@ class CoreAES:
             round_key = self.round_keys[i]
             if self.use_log and i != 0:
                 log['dataflow'].append(bytes(state).hex())
-            if i == 0:
+            if i == 0 and self.use_addrk:
                 state = core_utils.add_rk(state, round_key)
             else:
                 state = round.encrypt_round(state, round_key,
@@ -56,7 +57,8 @@ class CoreAES:
                             use_sbox = self.use_sbox,
                             custom_sbox = self.custom_sbox,
                             use_mixcolumns = self.use_mixcolumns,
-                            use_shiftrow = self.use_shiftrow)
+                            use_shiftrow = self.use_shiftrow,
+                            use_addrk = self.use_addrk)
         result = bytes(state)
         if self.use_log:
             log['output'] = result.hex()
@@ -76,7 +78,7 @@ class CoreAES:
             round_key = self.round_keys[-(i+1)]
             if self.use_log and i != 0:
                 log['dataflow'].append(bytes(state).hex())
-            if i == 0:
+            if i == 0 and self.use_addrk:
                 state = core_utils.add_rk(state, round_key)
             else:
                 state = round.decrypt_round(state, round_key,
@@ -84,7 +86,8 @@ class CoreAES:
                             use_sbox = self.use_sbox,
                             custom_inv_sbox = self.custom_inv_sbox,
                             use_mixcolumns = self.use_mixcolumns,
-                            use_shiftrow = self.use_shiftrow)
+                            use_shiftrow = self.use_shiftrow,
+                            use_addrk = self.use_addrk)
         result = bytes(state)
         if self.use_log:
             log['output'] = result.hex()

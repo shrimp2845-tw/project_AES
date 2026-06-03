@@ -1,6 +1,6 @@
 from . import core_utils
 
-def encrypt_round(state: list[int], rkey: list[int], last: bool = False, use_sbox: bool = True, custom_sbox: list[int] = None, use_mixcolumns: bool = True, use_shiftrow: bool = True) -> list[int]:
+def encrypt_round(state: list[int], rkey: list[int], last: bool = False, use_sbox: bool = True, custom_sbox: list[int] = None, use_mixcolumns: bool = True, use_shiftrow: bool = True, use_addrk: bool = True) -> list[int]:
     """
     Performs one encryption round of a block cipher (AES-like)
 
@@ -11,6 +11,7 @@ def encrypt_round(state: list[int], rkey: list[int], last: bool = False, use_sbo
         use_sbox (bool): Whether to perform the SubBytes transformation.
         custom_sbox (list[int], optional): A custom S-box lookup table. Defaults to None.
         use_mixcolumns (bool): Whether to perform the MixColumns transformation.
+        use_addrk(bool): Whether to perform the AddRoundKey transformation.
         use_shiftrow (bool): Whether to perform the ShiftRows transformation.
 
     Returns:
@@ -25,10 +26,11 @@ def encrypt_round(state: list[int], rkey: list[int], last: bool = False, use_sbo
         state = core_utils.shiftrow(state)
     if not last and use_mixcolumns:
         state = core_utils.mixcolumns(state)
-    state = core_utils.add_rk(state, rkey)
+    if use_addrk:
+        state = core_utils.add_rk(state, rkey)
     return state
 
-def decrypt_round(state: list[int], rkey: list[int], last: bool = False, use_sbox: bool = True, custom_inv_sbox: list[int] = None, use_mixcolumns: bool = True, use_shiftrow: bool = True) -> list[int]:
+def decrypt_round(state: list[int], rkey: list[int], last: bool = False, use_sbox: bool = True, custom_inv_sbox: list[int] = None, use_mixcolumns: bool = True, use_shiftrow: bool = True, use_addrk: bool = True) -> list[int]:
     """
     Performs one round of AES decryption.
 
@@ -39,6 +41,7 @@ def decrypt_round(state: list[int], rkey: list[int], last: bool = False, use_sbo
         use_sbox (bool): Whether to perform the InvSubBytes transformation.
         custom_inv_sbox (list[int], optional): A custom inverse S-box lookup table, Defaults to None.
         use_mixcolumns (bool): Whether to perform the InvMixColumns transformation.
+        use_addrk(bool): Whether to perform the AddRoundKey transformation.
         use_shiftrow (bool): Whether to perform the InvShiftRows transformation.
 
     Returns:
@@ -50,7 +53,8 @@ def decrypt_round(state: list[int], rkey: list[int], last: bool = False, use_sbo
         state = core_utils.inv_shiftrow(state)
     if use_sbox:
         state = core_utils.inv_subbytes(state, custom_inv_sbox)
-    state = core_utils.add_rk(state, rkey)
+    if use_addrk:
+        state = core_utils.add_rk(state, rkey)
     if not last and use_mixcolumns:
         state = core_utils.inv_mixcolumns(state)
     return state

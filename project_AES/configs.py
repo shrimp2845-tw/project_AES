@@ -11,6 +11,7 @@ class AESConfig:
         custom_sbox (list | None): A user-defined substitution table (256 integers).
             Requires `use_sbox` to be True. Defaults to None.
         use_shiftrow (bool): Enable/disable the ShiftRows transformation. Defaults to True.
+        use_addrk (bool): Enable/disable the AddRoundKey transformation. Defaults to True.
         use_log (bool): If True, logs the state of dataflow for futher analysis.
         progress_bar (bool): If True, displays a progress bar during process.
         rounds(int | None): If True, use chosen round to encrypt/decrypt. Must be smaller than default rounds.
@@ -19,6 +20,7 @@ class AESConfig:
     use_mixcolumns: bool = True
     custom_sbox: list | None = None
     use_shiftrow: bool = True
+    use_addrk: bool = True
     use_log: bool = False
     progress_bar: bool = False
     rounds: int | None = None

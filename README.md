@@ -2,7 +2,7 @@
 
 ## About
 - **Author:** shrimp2845  
-- **Version:** 0.4.3
+- **Version:** 0.5.0
 - **License:** MIT
 
 A pure Python implementation of the Advanced Encryption Standard (AES) algorithm with support for multiple key sizes, configurable internal transformations, detailed logging, and multiple cipher modes of operation.

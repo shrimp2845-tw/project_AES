@@ -25,6 +25,7 @@ NO_SBOX = AESConfig(use_sbox = False)
 NO_MIXCOLUMNS = AESConfig(use_mixcolumns = False)
 NO_SHIFTROW = AESConfig(use_shiftrow = False)
 RANDOM_SBOX = AESConfig(custom_sbox = RAND_S1)
+NO_ADDRK = AESConfig(use_addrk = False)
 
 def bytes_to_bits(byd: bytes) -> list[int]:
     return [int(bit) for byte in byd for bit in format(byte, '08b')]
@@ -68,7 +69,8 @@ def main():
         ("NO_SBOX", NO_SBOX),
         ("NO_MIXCOLUMNS", NO_MIXCOLUMNS),
         ("NO_SHIFTROW", NO_SHIFTROW),
-        ("RANDOM_SBOX", RANDOM_SBOX)]
+        ("RANDOM_SBOX", RANDOM_SBOX),
+        ("NO_ADDRK", NO_ADDRK)]
     for i, j in test_cases:
         print('_' * 30)
         print(f'Test Avalance: \n{i} : \n{test(j)}')
